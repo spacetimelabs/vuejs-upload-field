@@ -1,9 +1,10 @@
 {
   "name": "vuejs-upload-field",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "VueJS Upload Field",
   "author": "Erle Carrara <carrara.erle@gmail.com>",
   "private": false,
+  "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
