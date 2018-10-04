@@ -2,25 +2,28 @@ import { Buffer } from 'buffer'
 import Evaporate from 'evaporate'
 import webcrypto from 'webcrypto'
 
-const cryptoFunction = (method, digest) => {
-  return (data) => {
+function cryptoFunction (method, digest) {
+  return function (data) {
     const buf = Buffer.from(data)
     return webcrypto.createHash(method).update(buf).digest(digest)
   }
 }
 
-export default (options, config) => {
-  const { fileInput, progress } = options
-  return new Promise((resolve, reject) => {
-    Evaporate.create({
-      ...config,
+export default function (options, config) {
+  const fileInput = options.fileInput
+  const progress = options.progress
+  return new Promise(function (resolve, reject) {
+    const evaporateConfig = Object.assign({
       cryptoMd5Method: cryptoFunction('md5', 'base64'),
       cryptoHexEncodedHash256: cryptoFunction('sha256', 'hex')
-    }).then(evaporate => evaporate.add({
-      name: config.name,
-      file: fileInput.files[0],
-      progress: progress,
-      complete: resolve
-    }), reject)
+    }, config)
+    Evaporate.create(evaporateConfig).then(function (evaporate) {
+      evaporate.add({
+        name: config.name,
+        file: fileInput.files[0],
+        progress: progress,
+        complete: resolve
+      })
+    }, reject)
   })
 }
